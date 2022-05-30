@@ -179,6 +179,12 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("OKTA_BASE_URL", "okta.com"),
 				Description: "The Okta url. (Use 'oktapreview.com' for Okta testing)",
 			},
+			"custom_endpoint": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OKTA_CUSTOM_ENDPOINT", ""),
+				Description: "Custom URL endpoint for unit testing and caching",
+			},
 			"backoff": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -420,6 +426,11 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		requestTimeout: d.Get("request_timeout").(int),
 		maxAPICapacity: d.Get("max_api_capacity").(int),
 	}
+
+	if customEndpoint, ok := d.Get("custom_endpoint").(string); ok {
+		config.customEndpoint = customEndpoint
+	}
+
 	if v := os.Getenv("OKTA_API_SCOPES"); v != "" && len(config.scopes) == 0 {
 		config.scopes = strings.Split(v, ",")
 	}
