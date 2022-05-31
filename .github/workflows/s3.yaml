@@ -1,11 +1,7 @@
 name: terraform-prodiver-okta-s3-serve
 on:
   workflow_dispatch:
-    inputs:
-      dest:
-        description: 'Environment to deploy [stag|prod]'     
-        required: true
-        default: 'stag'
+
 jobs:
   CI:
     env:
