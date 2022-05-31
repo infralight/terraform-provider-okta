@@ -30,8 +30,6 @@ jobs:
     - run: go mod tidy  
     - name: Build Linux
       run: make build
-    - name: GO Lint
-      uses: golangci/golangci-lint-action@v2.5.1
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
