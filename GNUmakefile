@@ -2,7 +2,7 @@ SWEEP?=global
 TEST?=$$(go list ./... |grep -v 'vendor')
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=okta
-GOFMT:=gofumpt
+GOFMT:=goimports
 TFPROVIDERLINT=tfproviderlint
 STATICCHECK=staticcheck
 
@@ -13,12 +13,15 @@ ifdef TEST_FILTER
 	TEST_FILTER := -run $(TEST_FILTER)
 endif
 
-default: build
+default: install
 
 dep: # Download required dependencies
 	go mod tidy
 
 build: fmtcheck
+	CGO_ENABLED=0 go build -a -tags netgo -ldflags '-w -extldflags "-static"'
+
+install: fmtcheck
 	go install
 
 clean:
@@ -49,7 +52,7 @@ fmt: tools # Format the code
 	@$(GOFMT) -l -w .
 
 fmtcheck:
-	@gofumpt -d -l .
+	@$(GOFMT) -d -l .
 
 errcheck:
 	@sh -c "'$(CURDIR)/scripts/errcheck.sh'"
