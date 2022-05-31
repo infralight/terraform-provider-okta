@@ -30,6 +30,7 @@ jobs:
     - run: go mod tidy  
     - name: Build Linux
       run: make build
+    - run: chmod 755 bin/terraform-provider-okta
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
